@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+   <link rel="stylesheet" href="main.css">
+   <style>
+    #w{
+        
+        color: #59ff59;
+        margin-right: 10px;
+    }
+   </style>
+</head>
+<body>
+    <div class="overlay ">
+
+    </div>
+  <main class="main">
+    <header>
+        <div class="head">
+            <i onclick="openSidebar()" id="icon" class="material-icons hide">menu</i>
+            <h2 style="margin-left: 10px;">Dashboard</h2>
+        </div>
+    </header>
+    <section class="section">
+     
+<div class="board">
+    <div>
+        <i class="material-icons">emoji_events</i>
+
+    </div>
+    <div>
+        <h2><%= user.username%></h2>
+        <h3><%= user.code%></h3>
+    </div>
+</div>
+<div class="board">
+    <div>
+        <i class="material-icons">currency_rupee</i>
+
+    </div>
+    <div>
+       <h1><%= user.amount%></h1>
+    </div>
+</div>
+<div style="cursor: pointer;" onclick="whatApp()" class="board">
+    <div>
+        <i id="w" class="fa fa-whatsapp"></i>
+    </div>
+    <div>
+       <h2>Share To WhatsApp</h3>
+    </div>
+</div>
+
+<div data-code ="<%= user.code %>" id="share" class="board">
+    <div>
+        <i class="material-icons">share</i>
+    </div>
+    <div>
+       <h2>Share referral code</h3>
+    </div>
+</div>
+
+    </section>
+  </main>
+  
+  <%- include('./partials/slider'); %>
+
+
+<script src="main.js"></script>
+<script>
+    share.addEventListener('click',()=>{
+    let code = share.dataset.code
+    let link = getHost()+code
+    const shareData = {
+        title: 'Referral code',
+        text: 'Apply my referral and get 250 rupee',
+        url: link, // The URL you want to share
+      };
+    
+      navigator.share(shareData)
+        .then(() => console.log('Successfully shared'))
+        .catch((error) => console.error('Error sharing:', error));
+      
+    if (navigator.share) {
+        // Share API is supported
+      } else {
+       alert("share is no longer supported on yor device")
+      }
+      
+})
+
+
+function whatApp(){
+    let code = share.dataset.code
+    let link = getHost()+code
+    let w = `https://api.whatsapp.com/send?text=${link}`
+    let a = document.createElement('a')
+    a.href = w 
+    a.click()
+}
+</script>
+</body>
+</html>

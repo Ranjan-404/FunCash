@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script  src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Prifile</title>
+    <style>
+       .section .cover{
+    position: relative;
+    height: 30vh;
+    /* background-image: linear-gradient( 108.7deg,  rgba(221,22,224,1) 11%, rgba(111,22,190,1) 88.2% ); */
+    background-color: var(--primary);
+}
+
+.section{
+    padding: 0 !important;
+}
+.section img{
+    width: 150px;
+    height:150px;
+    border-radius: 50%;
+    object-fit: cover;
+    position: absolute;
+   top: 50%;
+   left: 50%;
+   transform: translateX(-50%);
+   cursor: pointer;
+}
+.section #camera{
+    background-color: var(--light);
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    position: absolute;
+   bottom: 0;
+   left: 0;
+   
+cursor: pointer;
+}
+
+.section .name{
+    text-align: center;
+    margin-top: 80px;
+    padding: 10px;
+}
+.section form{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+legend{
+  font-size: 19px;
+}
+.section fieldset{
+    padding: 20px;
+    border: 1px solid #4c4a4a;
+    border-radius: 10px;
+    width: 95%;
+    margin: 20px auto;
+}
+.section form .wrap{
+    display: flex;
+    align-items: start;
+    flex-direction: column;
+    gap: 10px;
+}
+button{
+    padding: 10px 30px;
+    width: 110px;
+    border: none;
+    outline: none;
+    font-size: 18px;
+    font-weight: bold;
+    background-color: var(--primary);
+    color: var(--fontClr);
+    border-radius: 4px;
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    gap: 10px;
+    cursor: pointer;
+}
+input{
+    padding: 10px;
+    width: 100%;
+   max-width: 500px;
+   border: none;
+   border-radius: 5px;
+   background-color: var(--light);
+   outline: none;
+   font-size: 18px;
+   color: var(--fontClr);
+   pointer-events: none;
+}
+      #delete{
+        text-decoration: none;
+        background: red;
+        color: white;
+        padding: 10px 30px;
+        border-radius: 5px;
+        display: inline-block;
+        margin: 10px 0;
+      }
+    </style>
+    <link rel="stylesheet" href="main.css" />
+  </head>
+  <body>
+    <div class="overlay "></div>
+    <main class="main ">
+      <header>
+        <div class="head">
+          <i  onclick="openSidebar()" id="icon" class="material-icons hide">menu</i>
+          <h2 style="margin-left: 10px">Profile</h2>
+        </div>
+      </header>
+      <section class="section">
+     
+        <div class="cover">
+            <img id="profileImg" src="https://static.vecteezy.com/system/resources/previews/019/896/008/original/male-user-avatar-icon-in-flat-design-style-person-signs-illustration-png.png" alt="Profile">
+           <form id="form" >
+            <label for="file">
+              <i id="camera" class="material-icons">photo_camera</i> 
+          </label>
+          <input name="file" style="display: none;" id="file" type="file">
+          <input id="hid" hidden type="submit" value="submit">
+           </form>
+        </div>
+        <div class="name">
+            <h1><%= user.username %></h1>
+            <h3><%= user.email %></h3>
+        </div>
+        
+        <fieldset>
+            <legend>Basic Info</legend>
+            <form method="post" action="/update">
+                <div class="wrap">
+                    <label for="name">Referral</label>
+                   <input readonly value="<%= user.code %>" type="number">
+                </div>
+                <div class="wrap">
+                    <label for="name">Name</label>
+                    <input name="username" value="<%= user.username %>" type="text" required>
+                </div>
+                <div class="wrap">
+                    <label for="name">Email</label>
+                    <input name="email" value="<%= user.email %>" type="email" required>
+                </div>
+                <div class="wrap">
+                    <label for="name">Phone</label>
+                    <input value="<%= user.phone %>" name="phone" type="tel">
+                </div>
+                <div class="wrap">
+                   <button type="submit">
+                    <i class="material-icons">save</i>
+                    Save</button>
+                </div>
+            </form>
+            <button onclick="edit()">
+                <i class="material-icons">edit</i>   
+                Edit</button>
+          <a id="delete" href="/delete">Delete account</a>
+        </fieldset>
+            </section>
+    </main>
+
+    <%- include('./partials/slider'); %>
+
+    <script src="main.js"></script>
+    <script>
+
+      function edit(){
+  let inputs =  document.querySelectorAll('input')
+  inputs.forEach((e ,i)=>{
+        e.style.pointerEvents  = "all"
+       
+       if(i > 2){
+        inputs[i].style.border = "2px solid green"
+       }
+    })
+    inputs[3].focus()
+}
+    </script>
+
+    <script>
+      let file = document.getElementById('file')
+      file.addEventListener('change',()=>{
+        document.getElementById('hid').click()
+      })
+      let form = document.getElementById('form')
+      form.addEventListener('submit', (e) => {
+        e.preventDefault()
+  let data = new FormData(form)
+  
+  $.ajax({
+    xhr: function() {
+      var xhr = new window.XMLHttpRequest();
+      xhr.upload.addEventListener("progress", function(evt) {
+        if (evt.lengthComputable) {
+          if (evt.loaded === evt.total) {
+            
+          }
+          var percentComplete = (evt.loaded / evt.total) * 100;
+          let percent = Math.trunc(percentComplete)
+         
+        }
+      }, false);
+      return xhr;
+    },
+    type: "POST",
+    url: "/upload",
+    contentType: false,
+    processData: false,
+    data: data,
+    success: function(response) {
+      if (response) {
+        document.getElementById('profileImg').src = response.profile
+      }
+    },
+  });
+})
+
+function fetchProfile(){
+  let profile = '<%= user.profile %>'
+ if(profile){
+  document.getElementById('profileImg').src = profile
+ }
+}
+fetchProfile()
+document.getElementById('profileImg').addEventListener('click',()=>{
+  document.getElementById('file').click()
+})
+let a = document.getElementById('delete');
+a.addEventListener('click', handleClick);
+
+function handleClick(e) {
+  e.preventDefault();
+  a.removeEventListener('click', handleClick); // Remove the event listener temporarily
+
+  let conf = confirm("Do you really want to delete your account");
+  if (conf) {
+    a.click(); // Trigger the click after confirmation
+  }
+
+  a.addEventListener('click', handleClick); // Add the event listener back after the action
+}
+
+    </script>
+  </body>
+</html>

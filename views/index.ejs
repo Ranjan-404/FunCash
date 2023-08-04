@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main>
+        <section id="loginSection">
+            <h1 >Login</h1>
+         <form method="post" action="/login" >
+            <div class="wrap">
+              <% if(locals.message){ %>
+        <span id="error"><%= message %></span>
+              <% } %>
+            </div>
+       
+             <div class="wrap2">
+                <i class="material-icons">email</i>
+                <input name="email" type="email" placeholder="Enter Email" required>
+             </div>
+          
+        
+           <div class="wrap2">
+            <i class="material-icons">lock</i>
+            <input name="password" type="password" placeholder="Enter Password" required>
+           </div>
+           
+         <div id="rem">
+            <input type="checkbox" id="check">
+            <label for="check">Remember me</label>
+         </div>
+            <div class="wrap">
+                <button type ='submit'>Login</button>
+            </div>
+          
+         </form>
+         <div class="links">
+            <span>don't have account? <a href="/signup">sign up</a></span>
+            <span>forgot your Password? <a href="/forgot">Reset</a></span>
+            </div>
+         
+        </section>
+        <section id="imgSection">
+            <img src="login.svg"alt="">
+        </section>
+    </main>
+<script>
+    let inputs = document.querySelectorAll('input')
+    let mail = localStorage.getItem('mail')
+    let pass = localStorage.getItem('pass')
+    let form  = document.querySelector('form')
+    let flag = null
+    flag = localStorage.getItem('flag')
+form.addEventListener('submit',()=>{
+if(flag==="true"){
+    let mail = inputs[0].value
+    let pass = inputs[1].value
+    localStorage.setItem("mail",mail)
+    localStorage.setItem("pass",pass)
+}
+
+})
+    inputs[2].addEventListener('change',(e)=>{
+        if(e.target.checked){
+  flag = true
+  localStorage.setItem('flag',"true")
+        }else{
+        flag= false
+  localStorage.setItem('flag',"false")
+        }
+    })
+    function inisilizeValue(){
+        if(flag==="true"){
+        inputs[0].value = mail
+        inputs[1].value = pass
+        inputs[2].setAttribute('checked',flag)
+    }else{
+        inputs[2].removeAttribute('checked',flag)
+    }
+    }
+
+        
+window.addEventListener('load', inisilizeValue)  
+</script>
+</body>
+</html>

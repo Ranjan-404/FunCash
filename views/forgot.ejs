@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+     main #imgSection img{
+width: 80%;
+
+}
+button{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+}
+.wrap.time{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 20px;
+    display: none;
+}
+#resend{
+  color: var(--primaryBlue);
+  font-weight: bold;
+  cursor: pointer;
+ 
+}
+#resend.disable{
+    pointer-events: none;
+    opacity: .4;
+}
+
+    </style>
+</head>
+<body>
+    <svg style="display: none">
+        <symbol id="icon.spinner">
+          <g>
+            <circle cx="12" cy="12" r="9.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><animate attributeName="stroke-dasharray" dur="1.5s" calcMode="spline" values="0 150;42 150;42 150;42 150" keyTimes="0;0.475;0.95;1" keySplines="0.42,0,0.58,1;0.42,0,0.58,1;0.42,0,0.58,1" repeatCount="indefinite"/><animate attributeName="stroke-dashoffset" dur="1.5s" calcMode="spline" values="0;-16;-59;-59" keyTimes="0;0.475;0.95;1" keySplines="0.42,0,0.58,1;0.42,0,0.58,1;0.42,0,0.58,1" repeatCount="indefinite"/></circle><animateTransform attributeName="transform" type="rotate" dur="2s" values="0 12 12;360 12 12" repeatCount="indefinite"/>
+          </g>
+        </svg>
+      </svg>
+    <main>
+        <section id="loginSection">
+            <h1 >Forgot Password</h1>
+         <form >
+            <div class="wrap">
+              <span id="error"></span>
+            </div>
+       
+           <div class="wrap2">
+            <i class="material-icons">email</i>
+            <input name="email" type="email" placeholder="Enter Email" required>
+           </div>
+           
+      
+            <div class="wrap">
+                <button type ='submit'>Send</button>
+            </div>
+      
+            <div id="wrap" class="wrap time">
+               <span class="disable" disabled="true" id="resend">Resend</span>
+               <span id="timer">40s</span>
+            </div>
+          
+         </form>
+         <div class="links">
+            <span> Back to login <a href="/">Login</a></span>
+           
+            </div>
+          
+        </section>
+        <section id="imgSection">
+            <img src="forgot.svg"alt="">
+        </section>
+    </main>
+    <script>
+const spinner = '<svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24"><use href="#icon.spinner"></use></svg>'
+let wrapper = document.getElementById('wrap')
+let button = document.querySelector('button')
+let remainingTime = 40
+let input = document.querySelector('input')
+let timer = document.getElementById('timer')
+let form = document.querySelector('form')
+let resend = document.getElementById('resend')
+form.addEventListener('submit',(e)=>{
+    e.preventDefault()
+    sendDataToServer("/reset",form )
+})
+
+
+function sendDataToServer(url ,form){
+    resend.classList.add('disable')
+    button.setAttribute('disabled','true')
+button.innerHTML = `${spinner} Sending...`
+    const formData = new FormData(form);
+  const params = new URLSearchParams(formData)
+    fetch(url, {
+    method: "POST",
+    body: params,
+  })
+    .then((response) => {
+      if(response.status ===404){
+        setError("User doesn't exist",true)
+      button.innerHTML = "Send"
+    button.removeAttribute('disabled','true')
+   input.value = null
+      }
+      if(response.ok){
+        button.innerHTML = "Sent"
+        showAndUpdateTimer()
+        setError("Email Sent successfully please check your Gmail",false)
+      }
+      return response.json(); 
+    })
+    .then((data) => { 
+   
+    })
+    .catch((error) => {
+      setError(error,true)
+    });
+  }
+
+  resend.onclick = ()=>{
+    sendDataToServer("/reset",form)
+  }
+  
+
+  function showAndUpdateTimer(){
+    wrapper.style.display = "flex"
+   let time = setInterval(()=>{
+   remainingTime--
+   timer.innerHTML = remainingTime+"s"
+   if(remainingTime<=0){
+    remainingTime = 41
+    clearInterval(time)
+resend.classList.remove('disable')
+   }
+    },900)
+  }
+
+  function setError(err,Error){
+    let errr = document.getElementById('error')
+   errr.innerHTML = err
+    if(Error){
+      errr.style.color = "red" 
+    }else{
+      errr.style.color = "green"
+    }
+  }
+    </script>
+</body>
+</html>
