@@ -26,7 +26,7 @@ app.use(
     secret: process.env.SECRET_KEY,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false, maxAge: 60*1000 }, // Session expires after 1 minut 
+    cookie: { secure: false, maxAge:  3600000 }, // Session expires after 1 minut 
   })
 );
 
