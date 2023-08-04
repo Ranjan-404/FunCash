@@ -3,7 +3,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cookieParser = require('cookie-parser');
 const path = require('path');
-// require("dotenv").config()
 const session = require('express-session');
 const app = express();
 const port = process.env.PORT || 3000;
@@ -26,7 +25,7 @@ app.use(
     secret: process.env.SECRET_KEY,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false, maxAge:  3600000 }, // Session expires after 1 minut 
+    cookie: { secure: false, maxAge:  3600000 }, 
   })
 );
 
